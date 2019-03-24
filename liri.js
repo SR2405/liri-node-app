@@ -11,34 +11,63 @@ var movie = process.argv[3];
 var song = process.argv[3];
 var artist = process.argv[3];
 
-
-if (process.argv[2] === "movie-this" && movie === undefined) {
-  movie = "Mr Nobody";
-  console.log(movie);
-
-}
+var command = process.argv[2];
 
 
-axios.get("http://www.omdbapi.com/?t=" + movie + "  &y=&plot=short&apikey=trilogy").then(
-  function (response) {
-    //To look into the full arrary and see how to pull info do the below:
-    // console.log(response);
-    if (process.argv[2] === "movie-this") {
+function getMovie (movieName){
 
+  axios.get("http://www.omdbapi.com/?t=" + movie + "  &y=&plot=short&apikey=trilogy").then(
+    function (response) {
+      //To look into the full arrary and see how to pull info do the below:
+      // console.log(response);
+      if (command === "movie-this") {
+  
+        console.log("======================================");
+  
+        console.log("Realease Year: " + response.data.Year);
+        console.log("The movie title is: " + response.data.Title);
+        console.log("The movie rating is: " + response.data.imdbRating);
+        console.log("The movie plot is: " + response.data.Plot);
+        console.log("The movie languages are: " + response.data.Language);
+        console.log("The actors are: " + response.data.Actors);
+        console.log("The movie country is: " + response.data.Country);
+        console.log("The Rotten Tomato rating is: " + response.data.Ratings[1].Value);
+  
+      };
+  
+  
+    });
+};
 
-      console.log("Realease Year: " + response.data.Year);
-      console.log("The movie title is: " + response.data.Title);
-      console.log("The movie rating is: " + response.data.imdbRating);
-      console.log("The movie plot is: " + response.data.Plot);
-      console.log("The movie languages are: " + response.data.Language);
-      console.log("The actors are: " + response.data.Actors);
-      console.log("The movie country is: " + response.data.Country);
-      console.log("The Rotten Tomato rating is: " + response.data.Ratings[1].Value);
-
+if (command === "movie-this") {
+    if (movie === undefined){
+      movie = "Mr Nobody";
     }
+    getMovie(movie);
+};
 
 
-  })
+// axios.get("http://www.omdbapi.com/?t=" + movie + "  &y=&plot=short&apikey=trilogy").then(
+//   function (response) {
+//     //To look into the full arrary and see how to pull info do the below:
+//     // console.log(response);
+//     if (command === "movie-this") {
+
+//       console.log("======================================");
+
+//       console.log("Realease Year: " + response.data.Year);
+//       console.log("The movie title is: " + response.data.Title);
+//       console.log("The movie rating is: " + response.data.imdbRating);
+//       console.log("The movie plot is: " + response.data.Plot);
+//       console.log("The movie languages are: " + response.data.Language);
+//       console.log("The actors are: " + response.data.Actors);
+//       console.log("The movie country is: " + response.data.Country);
+//       console.log("The Rotten Tomato rating is: " + response.data.Ratings[1].Value);
+
+//     }
+
+
+//   })
 
 
 
@@ -54,55 +83,59 @@ function getSongFromSpotify(songName) {
     // console.log(data.tracks.items[0].album.name);
     for (var i = 0; i < data.tracks.items.length; i++) {
 
-
-
       // add if / else  to add "The Sign" if no value is provided
       // SHOW THE BELOW
-      console.log("this is the Artist:" + data.tracks.items[i].artists[0].name);
-      console.log("this is the Album:" + data.tracks.items[i].album.name);
-      console.log("this is the preview URL:" + data.tracks.items[i].preview_url);
-      console.log("the name of the song is:" + data.tracks.items[i].name);
+      console.log("======================================");
+
+      console.log("This is the Artist: " + data.tracks.items[i].artists[0].name);
+      console.log("This is the Album: " + data.tracks.items[i].album.name);
+      console.log("This is the preview URL: " + data.tracks.items[i].preview_url);
+      console.log("This is the song: " + data.tracks.items[i].name);
 
 
     }
   })
 
 
-}
+};
 
 
-
-
-if (process.argv[2] === "spotify-this-song") {
+if (command === "spotify-this-song") {
 
   if (song === undefined) {
     song = "The Sign";
-    console.log(song);
+    // console.log(song);
   }
 
   getSongFromSpotify(song);
-}
+};
 
 
-
+function getConcert (artist){
 
 
   axios.get("https://rest.bandsintown.com/artists/" + artist + "/events?app_id=codingbootcamp").then(
 
     function (response) {
       // console.log(response.data);
-      if (process.argv[2] === "concert-this") {
+        console.log("======================================");
+
         console.log("This is the Name of the Venue: " + response.data[1].venue.name);
         console.log("This is the location: " + response.data[1].venue.country);
         //   //this needs to be formatted as MM/DD/YYY
         console.log("Date of the Event: " + response.data[2].datetime);
 
-      }
-      // else {
-      //   //move on
-      // }
+      
+      
 
     });
+};
+
+if (command === "concert-this"){
+getConcert(artist);
+};
+
+  
 
   // FS Part Show
 
@@ -112,14 +145,20 @@ if (process.argv[2] === "spotify-this-song") {
       return console.log(error);
     }
 
-    if (process.argv[2] === "do-what-it-says") {
-      console.log(data);
+    if (command === "do-what-it-says") {
+      // console.log(data);
 
       var dataArr = data.split(",");
-      console.log(dataArr[1]);
+      // console.log(dataArr[1]);
+      // console.log(dataArr[3]);
+            console.log(dataArr[5]);
 
 
-      getSongFromSpotify(dataArr[1]);
+
+
+      // getSongFromSpotify(dataArr[1]);
+      // getMovie(dataArr[3]);
+      getConcert(dataArr[5]);
 
     }
 
